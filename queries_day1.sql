@@ -137,6 +137,84 @@ select * from movies
 where abs(duration - 120) <= 120 * 0.05
 order by duration;
 
+select 
+	CEILING(duration / 60.0),
+	FLOOR(duration / 60.0),
+	ROUND(duration / 60.0, 2),
+	duration / 60.0
+from movies
+order by duration desc;
+
+-- titres et nb de caractères des titres de films
+-- LEN
+select title, len(title) as title_length 
+from movies
+where  len(title) >= 100   -- title_length pas dispo ici
+order by title_length desc;
+
+-- NB: charindex renvoie 0 si non trouvé
+select 
+	lower(left(name, 5)) as name_first5,
+	upper(right(name, 5)) as name_last5,
+	SUBSTRING(name, 3, 5) as name_3to7,
+	charindex(' ',name) as space_index,
+	substring(name, 1, charindex(' ', name)-1) as firstname
+from stars
+where charindex(' ',name) > 0;
+
+select concat(title, ' (', year, ')') as title_year
+from movies;
+
+-- stars qui s'appelle John
+select * from stars 
+where name like 'John %'
+	or name like 'John';
+
+-- les films Star Wars (titre, année) triés par année
+select * from movies
+where title like 'Star Wars%'
+order by year;
+
+-- idem en ne gardant que les films de la trilogie d'origine
+select * from movies
+where 
+	title like 'Star Wars%'
+	and genres not like '%Short%'
+	and year <= 1983
+order by year;
+
+select top(3) * from movies
+where 
+	title like 'Star Wars%'
+	and genres not like '%Short%'
+order by year;
+
+
+
+
+
+
+
+
+
+
+
+-- PB: + entre text et nombre ne marche pas
+-- select title + ' (' + year + ')' as title_year
+-- from movies;
+-- solution : conversion explicite
+-- NB: les autres ||
+select title + ' (' + convert(varchar,year) + ')' as title_year
+from movies;
+
+
+
+
+
+
+
+
+
 
 
 
