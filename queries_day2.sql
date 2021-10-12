@@ -88,6 +88,66 @@ select
 	EOMONTH('2100-02-01');
 
 
+select
+	name, 
+	FORMAT(birthdate, 'dd/MM/yyyy'),
+	FORMAT(birthdate, 'd', 'fr_FR'),
+	FORMAT(birthdate, 'd', 'en_US')
+from stars
+where name like 'Natalie Portman';
+
+select * from stars where birthdate is null;
+select * from stars where deathdate is not null;
+
+select 
+	title, 
+	year,
+	coalesce(synopsis, 'No Summary') as synopsis
+from movies
+where year between 1963 and 1964;
+
+-- Échec de la conversion de la date et/ou de l'heure à partir d'une chaîne de caractères.
+select
+	name,
+	coalesce(birthdate, 'Unknown') as birthdate
+from stars;
+
+select
+	name,
+	coalesce(format(birthdate,'d', 'fr_FR'), 'Unknown') as birthdate,
+	coalesce(convert(varchar, birthdate), 'Unknown') as birthdate2,
+	coalesce(birthdate, deathdate, '2050-01-01') as a_date
+from stars;
+
+-- masquer une donnée (ici année 2020)
+select 
+	title,
+	year,
+	nullif(year, 2020) as year_except2020
+from movies
+where year > 2015;
+
+-- films avec mention court métrage ou long métrage 
+-- suivant la durée 30mn
+select 
+	title,
+	year,
+	duration,
+	case
+		when duration < 30 then 'court métrage'
+		else 'long métrage'
+	end as classification
+from movies;
+
+-- prénom ou nom unique de la star
+select 
+	substring(name, 1, charindex(' ', name)-1) as firstname
+from stars
+where charindex(' ',name) > 0;
+
+
+
+
 
 
 
