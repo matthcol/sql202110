@@ -65,6 +65,29 @@ from movies
 where datepart(year, getdate()) - year < 10
 order by year desc, title;
 
+select 
+	*,
+	DATEDIFF(year, birthdate, getdate()) as age_years,
+	DATEDIFF(day, birthdate, getdate()) as age_days,
+	DATEADD(year, 21, birthdate) as date_21y,
+	DATEADD(day, -2, birthdate) as birthdate_minus2days
+from stars
+where name like 'Clint Eastwood';
+
+select 
+	*,
+	DATEFROMPARTS(year(birthdate), month(birthdate), 1) as debut_mois,
+	EOMONTH(birthdate) as fin_mois
+from stars
+where name like 'Natalie Portman';
+
+select 
+	EOMONTH('2021-02-01'),
+	EOMONTH('2020-02-01'),
+	EOMONTH('2000-02-01'),
+	EOMONTH('2100-02-01');
+
+
 
 
 
