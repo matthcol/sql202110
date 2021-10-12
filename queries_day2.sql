@@ -283,6 +283,111 @@ set genres = synopsis, synopsis = poster_uri, poster_uri = genres
 where id = 54215;
 select * from movies where id = 54215; 
 
+-- fonctions d'agrégation
+select 
+	count(*) as nb_movies,
+	count(id) as nb_ids,  -- idem le nb ligns car colonne not null
+	count(duration) as nb_duration, -- les NULL ne sont pas comptés
+	count(poster_uri) as nb_poster, -- les NULL ne sont pas comptés
+	count(distinct id_director) as nb_directors -- nb realisateurs différents
+from movies;
+ 
+-- années plus ancienne et plus récente des films
+select 
+	min(year) as first_year,
+	max(year) as last_year
+from movies;
+
+-- durée totale des films en minutes (puis heures, jours, années)
+select 
+	sum(duration) as total_duration_mn,
+	sum(duration) / 60 as total_duration_hours,
+	sum(duration) % 60 as total_duration_hours_mn,
+	sum(duration) / 60 / 24 as total_duration_days,
+	(sum(duration) / 60) % 24 as total_duration_days_hours,
+	sum(duration) / 60 / 24 / 365 as total_duration_years
+from movies;
+
+-- stats : nb, min et max d'année, durée totale pour un réalisateur
+-- Clint Eastwood
+select * from stars where name like 'Clint Eastwood'; -- 142
+select 
+	count(*) as nb_movies,
+	min(year) as first_year,
+	max(year) as last_year,
+	sum(duration) / 60.0 as total_duration_hours
+from movies
+where id_director = 142;
+
+select * from stars where name like 'James Cameron'; -- 116
+select 
+	count(*) as nb_movies,
+	min(year) as first_year,
+	max(year) as last_year,
+	sum(duration) / 60.0 as total_duration_hours,
+	-- title -- interdit car 14 valeurs différentes
+	string_agg(title, ', ') WITHIN GROUP ( ORDER BY year desc) as filmography
+from movies
+where id_director = 116;
+
+
+-- nombres d'acteurs
+select count(*) from stars; -- nb de personnes
+select count(distinct id_actor) from play; -- 48762
+
+-- nombre de stars des années 30
+select count(*) as nb_stars from stars 
+where year(birthdate) between 1930 and 1939;
+
+-- nombre de stars nés en avril
+select count(*) as nb_stars from stars 
+where month(birthdate) = 4;
+select count(*) as nb_stars from stars 
+where month(birthdate) = 1;
+
+-- teaser day 3 : nombre de stars nés par mois
+
+
+
+
+
+
+	
+
+
+select count(*) from stars;
+select count(*) from play;
+
+-- croiser les données de 2 tables
+select * from movies
+where title like 'Star Wars: Episode IV - A New Hope';
+-- Réalisateur de ce film : id_director = 184
+select * from stars
+where id = 184;
+
+select * from stars
+where id = (
+		select id_director from movies
+		where title like 'Star Wars: Episode IV - A New Hope');
+
+-- PB : La sous-requête a retourné plusieurs valeurs. Cela n'est pas autorisé quand la sous-requête suit =, !=, <, <= , >, >= ou quand elle est utilisée en tant qu'expression.
+select * from stars
+where id = (
+		select id_director from movies
+		where title like 'Star Wars%');
+
+select * from stars
+where id in (
+		select id_director from movies
+		where title like 'Star Wars%');
+
+select id_director from movies
+where title like 'Star Wars%'
+order by id_director;
+
+
+
+
 
 
 
