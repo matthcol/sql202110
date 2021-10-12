@@ -48,4 +48,26 @@ select
 	TIMEFROMPARTS(9,45,30,0,0) as f_timefromparts;
 
 -- stars avec leur age (au 31/12)
+select 
+	name,
+	birthdate,
+	year(birthdate) as birth_year,
+	year(getdate()) as current_year,
+	year(getdate()) - year(birthdate) as age
+from stars
+order by age desc;
+
+-- films de moins de 10 ans
+select 
+	*,
+	datepart(year, getdate()) - year as age  -- pour vérifier
+from movies
+where datepart(year, getdate()) - year < 10
+order by year desc, title;
+
+
+
+
+
+
 
