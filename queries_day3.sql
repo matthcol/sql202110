@@ -97,6 +97,29 @@ from
 where s.name like 'Steve McQueen'
 order by birthdate, year;
 
+-- titres, années et réalisateur des films de 1984
+select m.title, m.year, s.*
+from movies m join stars s on m.id_director = s.id
+where m.year = 1984
+order by title;
+
+-- films où DiCaprio a collaboré avec Martin Scorcese
+select *
+from 
+	stars s_act
+	join play p on s_act.id = p.id_actor
+	join movies m on p.id_movie = m.id
+	join stars s_dir on m.id_director = s_dir.id
+where
+	s_act.name like '% DiCaprio'
+	and s_dir.name like 'Martin Scorsese'
+order by m.year;
+
+
+
+
+
+
 
 
 
