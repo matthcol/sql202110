@@ -352,6 +352,24 @@ having count(ma.id) >= 2
 order by nb_movies desc;
 
 
+-- fonctions analytiques (fenetrages)
+select
+	rank() over (order by duration desc) as rank_d,
+	rank() over (partition by year order by duration desc) as rank_yd,
+	year, title, duration 
+from movies 
+order by year desc, duration desc;
+-- order by duration desc;
+
+-- sous requetes dépendantes avec exists / not exists
+select * from stars s
+where exists (select * from movies m where m.id_director = s.id);
+
+-- Exo super bonus :
+-- acteurs ayant joué avec tous ces réalisateurs : Eastwood, Scorcese, Spielberg, Tarantino 
+-- acteurs ayant joué dans tous les star wars
+
+
 
 
 
