@@ -193,6 +193,59 @@ where
 	and m.title not like '%Deleted%'
 order by m.title;
 
+-- fonctions d'agrégations sur toute la table (ou traitement précédent)
+select 
+	-- title,  -- pas possible car pls valeurs à mettre sur 1 ligne
+	string_agg(title, ', ') as titles,
+	count(*) as nb_movies, 
+	min(year) as first_year, max(year) as last_year,
+	sum(duration) as total_duration
+from movies m 
+where 
+	m.title like 'Star Wars%'
+	and m.title not like '%Deleted%';
+
+
+-- nb films par année
+select year, count(*) as nb_movies
+from movies
+group by year
+order by year;
+
+-- nb films par année dans les années 80
+select year, count(*) as nb_movies	-- 4
+from movies							-- 1
+where year between 1980 and 1989    -- 2
+group by year						-- 3
+--order by year;
+order by nb_movies desc;			-- 5
+
+-- nb films par année dans les années 80 (cut à nb de films >= 20)
+select year, count(*) as nb_movies	-- 5
+from movies							-- 1
+where year between 1980 and 1989    -- 2
+group by year						-- 3
+having count(*) >= 20				-- 4
+order by nb_movies desc;			-- 6
+
+select * 
+from (select year, count(*) as nb_movies	-- 4
+	from movies							-- 1
+	where year between 1980 and 1989    -- 2
+	group by year) nb_movies_by_year
+where nb_movies >= 20
+order by nb_movies desc;
+
+
+-- 1. nb films, 1ere année, 2e année, durée totale par réalisateurs
+--	    a. par numéro de réalisateur 
+--      b. par réalisateur (au moins le nom, ...)
+
+-- 2. compter le nb d'acteurs par star wars (y compris ceux sans acteurs)
+-- 3. compter le nb de films joués par acteurs dans la franchise Star Wars
+--			avec un cut à au moins 3 films
+
+
 
 
 
