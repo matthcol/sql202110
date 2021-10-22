@@ -237,9 +237,20 @@ where nb_movies >= 20
 order by nb_movies desc;
 
 
--- 1. nb films, 1ere année, 2e année, durée totale par réalisateurs
+-- 1. nb films, 1ere année, dernière année, durée totale par réalisateurs
 --	    a. par numéro de réalisateur 
 --      b. par réalisateur (au moins le nom, ...)
+-- Réponse 1.a
+select 
+	id_director, 
+	count(*) as nb_movies, 
+	min(year) as first_year, 
+	max(year) as last_year, 
+	sum(duration) as total_duration
+from movies
+where id_director is not null -- enlever le groupe avec tous les films sans real
+group by id_director
+order by count(*) desc;
 
 -- 2. compter le nb d'acteurs par star wars (y compris ceux sans acteurs)
 -- 3. compter le nb de films joués par acteurs dans la franchise Star Wars
