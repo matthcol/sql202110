@@ -115,8 +115,28 @@ where
 	and s_dir.name like 'Martin Scorsese'
 order by m.year;
 
+-- films de star wars
+select *
+from movies m join stars s on m.id_director = s.id
+where 
+	m.title like 'Star Wars%'
+	and m.title not like '%Deleted%'
+order by year;
 
+-- compter le nb de résultats de la requete précédente
+-- = le nb de films stars wars ?
+select count(*) as nb_movies
+from movies m join stars s on m.id_director = s.id
+where 
+	m.title like 'Star Wars%'
+	and m.title not like '%Deleted%';
 
+-- nb de films star wars (hors bonus films)
+select count(*) as nb_movies
+from movies m 
+where 
+	m.title like 'Star Wars%'
+	and m.title not like '%Deleted%';
 
 
 
