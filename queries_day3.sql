@@ -279,6 +279,77 @@ order by m.year;
 
 -- 3. compter le nb de films joués par acteurs dans la franchise Star Wars
 --			avec un cut à au moins 3 films
+-- NB : enquete intermédiaire
+select s.*, m.*, p.*
+from
+	movies m
+	join play p on m.id = p.id_movie
+	join stars s on p.id_actor = s.id
+where
+	m.title like 'Star Wars%'
+	and m.title not like '%Deleted%'
+order by s.id, s.name;
+
+-- nb: essayer d'utiliser first_value pour eviter la redondance sur p.role
+select 
+	s.id, s.name,
+	count(m.id) as nb_movies,
+	string_agg(p.role, ', ') as roles
+from
+	movies m
+	join play p on m.id = p.id_movie
+	join stars s on p.id_actor = s.id
+where
+	m.title like 'Star Wars%'
+	and m.title not like '%Deleted%'
+group by s.id, s.name
+having count(m.id) >= 3
+order by nb_movies desc;
+
+-- prendre le 1er role joué dans la franchise (chronologie de tournage)
+select 
+	s.id, s.name,
+	count(ma.id) as nb_movies,
+	ma.first_role,
+	string_agg(ma.role, ', ') as roles
+from
+	( select 
+		*,
+		first_value(p.role) over (
+		partition by p.id_actor 
+		order by m.year) as first_role
+	  from movies m 
+		join play p on m.id = p.id_movie
+	  where
+		m.title like 'Star Wars%'
+		and m.title not like '%Deleted%') ma
+	join stars s on ma.id_actor = s.id
+group by s.id, s.name, ma.first_role
+having count(ma.id) >= 2
+order by nb_movies desc;
+
+-- idem avec with
+with ma as ( 
+	select 
+		*,
+		first_value(p.role) over (
+		partition by p.id_actor 
+		order by m.year) as first_role
+	  from movies m 
+		join play p on m.id = p.id_movie
+	  where
+		m.title like 'Star Wars%'
+		and m.title not like '%Deleted%')
+select 
+	s.id, s.name,
+	count(ma.id) as nb_movies,
+	ma.first_role,
+	string_agg(ma.role, ', ') as roles
+from ma	
+	join stars s on ma.id_actor = s.id
+group by s.id, s.name, ma.first_role
+having count(ma.id) >= 2
+order by nb_movies desc;
 
 
 
