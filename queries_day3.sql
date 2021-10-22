@@ -115,7 +115,7 @@ where
 	and s_dir.name like 'Martin Scorsese'
 order by m.year;
 
--- films de star wars
+-- films de star wars avec leur réalisateur
 select *
 from movies m join stars s on m.id_director = s.id
 where 
@@ -137,6 +137,28 @@ from movies m
 where 
 	m.title like 'Star Wars%'
 	and m.title not like '%Deleted%';
+
+select *
+from movies m 
+where 
+	m.title like 'Star Wars%'
+	and m.title not like '%Deleted%';
+
+-- films de stars wars avec leur réalisateur (si connu)
+select *
+from movies m left join stars s on m.id_director = s.id
+where 
+	m.title like 'Star Wars%'
+	and m.title not like '%Deleted%'
+order by m.year;
+
+select m.title, m.year, s.name
+from movies m left join stars s on m.id_director = s.id
+where 
+	m.title like 'Star Wars%'
+	and m.title not like '%Deleted%'
+order by m.year;
+
 
 
 
