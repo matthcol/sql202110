@@ -65,5 +65,40 @@ select *
 from play p inner join stars s on p.id_actor = s.id 
 where s.name like 'Alec Baldwin';
 
+-- jointure pivot 
+select *
+from play p, stars s
+where
+	p.id_actor = s.id
+	and s.name like 'Alec Baldwin';
+
+select 
+	m.*, s.*, p.role 
+from 
+	movies m
+	join play p on m.id = p.id_movie
+	join stars s on p.id_actor = s.id 
+where s.name like 'Alec Baldwin';
+
+select 
+	m.title, m.year, p.role, s.name, s.birthdate
+from 
+	movies m
+	join play p on m.id = p.id_movie
+	join stars s on p.id_actor = s.id 
+where s.name like 'Alec Baldwin';
+
+select 
+	m.title, m.year, p.role, s.name, s.birthdate
+from 
+	movies m
+	join play p on m.id = p.id_movie
+	join stars s on p.id_actor = s.id 
+where s.name like 'Steve McQueen'
+order by birthdate, year;
+
+
+
+
 
 
