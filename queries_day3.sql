@@ -152,6 +152,7 @@ where
 	and m.title not like '%Deleted%'
 order by m.year;
 
+-- idem avec projection des colonnes "intéressantes"
 select m.title, m.year, s.name
 from movies m left join stars s on m.id_director = s.id
 where 
@@ -159,8 +160,38 @@ where
 	and m.title not like '%Deleted%'
 order by m.year;
 
+-- idem avec right join
+select * -- m.title, m.year, s.name
+from stars s right join movies m on m.id_director = s.id
+where 
+	m.title like 'Star Wars%'
+	and m.title not like '%Deleted%'
+order by m.year;
 
 
+
+-- casting des films stars wars
+-- 1. en jointure interne
+-- 2. en jointure externe (garder tous les star wars)
+select *
+from
+	movies m
+	join play p on m.id = p.id_movie
+	join stars s on p.id_actor = s.id
+where 
+	m.title like 'Star Wars%'
+	and m.title not like '%Deleted%'
+order by m.title;
+
+select *
+from
+	movies m
+	left join play p on m.id = p.id_movie
+	left join stars s on p.id_actor = s.id
+where 
+	m.title like 'Star Wars%'
+	and m.title not like '%Deleted%'
+order by m.title;
 
 
 
