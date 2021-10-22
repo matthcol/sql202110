@@ -252,7 +252,31 @@ where id_director is not null -- enlever le groupe avec tous les films sans real
 group by id_director
 order by count(*) desc;
 
+-- Réponse 1.b
+select 
+	s.id, s.name,
+	count(*) as nb_movies, 
+	min(m.year) as first_year, 
+	max(m.year) as last_year, 
+	sum(m.duration) as total_duration
+from movies m join stars s on m.id_director = s.id
+group by s.id, s.name
+order by count(*) desc;
+
 -- 2. compter le nb d'acteurs par star wars (y compris ceux sans acteurs)
+select 
+	m.title, m.year, 
+	count(p.id_actor) as nb_actor
+from
+	movies m
+	left join play p on m.id = p.id_movie
+where 
+	m.title like 'Star Wars%'
+	and m.title not like '%Deleted%'
+group by m.id, m.title, m.year
+order by m.year;
+
+
 -- 3. compter le nb de films joués par acteurs dans la franchise Star Wars
 --			avec un cut à au moins 3 films
 
